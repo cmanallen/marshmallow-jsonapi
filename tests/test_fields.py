@@ -47,7 +47,7 @@ class TestGenericRelationshipField:
         assert 'data' in result['author']
         assert result['author']['data']
 
-        assert result['author']['data']['id'] == post.author.id
+        assert result['author']['data']['id'] == str(post.author.id)
 
     def test_include_data_single_foreign_key(self, post):
         field = Relationship(
@@ -56,7 +56,7 @@ class TestGenericRelationshipField:
             include_data=True, type_='people'
         )
         result = field.serialize('author_id', post)
-        assert result['author_id']['data']['id'] == post.author_id
+        assert result['author_id']['data']['id'] == str(post.author_id)
 
     def test_include_data_many(self, post):
         field = Relationship(
@@ -68,7 +68,7 @@ class TestGenericRelationshipField:
         assert 'data' in result['comments']
         assert result['comments']['data']
         ids = [each['id'] for each in result['comments']['data']]
-        assert ids == [each.id for each in post.comments]
+        assert ids == [str(each.id) for each in post.comments]
 
     def test_deserialize_data_single(self, post):
         field = Relationship(

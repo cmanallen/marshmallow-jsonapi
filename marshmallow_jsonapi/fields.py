@@ -10,7 +10,6 @@ from marshmallow.utils import get_value
 from .utils import resolve_params
 
 
-
 class BaseRelationship(Field):
     """Base relationship field. This is used by `marshmallow_jsonapi.Schema` to determine
     which fields should be formatted as relationship objects.
@@ -88,15 +87,20 @@ class Relationship(BaseRelationship):
         return None
 
     def add_resource_linkage(self, value):
+        def stringify(value):
+            if value is not None:
+                return str(value)
+            return value
+
         if self.many:
             included_data = [{
                 'type': self.type_,
-                'id': get_value(self.id_field, each, each)
+                'id': stringify(get_value(self.id_field, each, each))
             } for each in value]
         else:
             included_data = {
                 'type': self.type_,
-                'id': get_value(self.id_field, value, value)
+                'id': stringify(get_value(self.id_field, value, value))
             }
         return included_data
 
